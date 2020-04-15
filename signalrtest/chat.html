@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="Scripts/jquery-1.6.4.js"></script>
+    <script src="Scripts/jquery.signalR-2.2.2.js"></script>
+    <script src="signalr/hubs"></script>
+    <script>
+        $(function () {
+            name = prompt("enter your name");
+             chathub = $.connection.chathub;
+            $.connection.hub.start();
+
+            chathub.client.newMessage = function (name, message) {
+                $("ul").append("<li>" + name + " : " + message + "</li>");
+            }
+            chathub.client.newGroupMess = function (name, group, message) {
+                $("ul").append("<li>" + name + " (" + group + "): " + message + "</li>");
+            }
+            chathub.client.newMember = function (name, group) {
+                $("ul").append("<li>" + name + " joind " + group + "</li>");
+            }
+
+  });
+        function send() {
+            chathub.server.send(name, $("#txt").val());
+        }
+
+        function sendToGroup() {
+            chathub.server.sendGroup(name, $("#Gtxt").val(), $("#txt").val())
+        }
+
+        function join() {
+            chathub.server.joinGroup($("#Gtxt").val(),name)
+        }
+
+    </script>
+</head>
+<body>
+
+    <input type="text" id="txt" />
+    <input type="button" onclick="send()" value="send" />
+    <input type="button" onclick="sendToGroup()" value="send to group" />
+    <br />
+    <br />
+    <input type="text" id="Gtxt" />
+    <input type="button" onclick="join()" value="join group" />
+
+
+
+    <ul></ul>
+
+
+
+
+</body>
+</html>
